@@ -24,9 +24,10 @@ function byToken(accessToken) {
 
     params.access_token = accessToken;
 
-    return request({
+    return request.post({
       uri: 'https://api.vk.com/method/' + method,
-      qs: params
+      form: params,
+      timeout: 5000
     }, handleResponse(callback));
   };
 }
@@ -73,13 +74,19 @@ function byApp(clientID, clientSecret) {
 function handleResponse(cb) {
   if (typeof cb === 'undefined') return;
   return function (err, resp, body) {
+    if (err) {
+      console.error('err', err, body, resp);
+      return cb(err);
+    }
     try {
       var result = JSON.parse(body);
     } catch (e) {
+      console.error('e', body, resp);
       return cb(e);
     }
 
     if (result.error) {
+      console.error('result.error', result.error);
       return cb(result.error);
     }
 
