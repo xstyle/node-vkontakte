@@ -22,7 +22,7 @@ function byToken(accessToken) {
       params = {};
     }
 
-    params.access_token = accessToken;
+    params.access_token = params.access_token || accessToken;
 
     return request.post({
       uri: 'https://api.vk.com/method/' + method,
